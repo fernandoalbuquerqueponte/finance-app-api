@@ -1,3 +1,3 @@
-const name = ''
+const name = 'deded'
 
 console.log(name)
