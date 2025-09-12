@@ -15,6 +15,10 @@ export const invalidAmountResponse = () => {
     })
 }
 
+export const checkIfTypeIsValid = (type) => {
+    return ['EARNING', 'EXPENSE', 'INVESTMENT'].includes(type)
+}
+
 export const invalidTypeResponse = () => {
     return badRequest({
         message: 'The type must be EARNING, EXPENSE or INVESTMENT.',
