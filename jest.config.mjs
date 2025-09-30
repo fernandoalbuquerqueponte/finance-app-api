@@ -6,6 +6,7 @@
 /** @type {import('jest').Config} */
 const config = {
     coverageDirectory: 'coverage',
+    watchPathIgnorePatterns: ['<rootDir>/.postgres'],
     coverageProvider: 'v8',
 }
 
