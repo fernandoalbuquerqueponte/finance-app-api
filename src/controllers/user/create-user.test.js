@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+
 import { CreateUserController } from './create-user'
 
 describe('Create User Controller', () => {
@@ -13,10 +15,10 @@ describe('Create User Controller', () => {
 
         const httpRequest = {
             body: {
-                first_name: 'Fernando',
-                last_name: 'Albuquerque',
-                email: 'example@example.com',
-                password: '12345678910',
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({ length: 7 }),
             },
         }
 
@@ -35,9 +37,9 @@ describe('Create User Controller', () => {
 
         const httpRequest = {
             body: {
-                last_name: 'Albuquerque',
-                email: 'example@example.com',
-                password: '12345678910',
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({ length: 7 }),
             },
         }
         // act
@@ -55,9 +57,9 @@ describe('Create User Controller', () => {
 
         const httpRequest = {
             body: {
-                first_name: 'Fernando',
-                email: 'example@example.com',
-                password: '12345678910',
+                first_name: faker.person.firstName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({ length: 7 }),
             },
         }
 
@@ -75,9 +77,9 @@ describe('Create User Controller', () => {
 
         const httpRequest = {
             body: {
-                first_name: 'Fernando',
-                last_name: 'Albuquerque',
-                password: '12345678910',
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                password: faker.internet.password({ length: 7 }),
             },
         }
 
@@ -95,10 +97,10 @@ describe('Create User Controller', () => {
 
         const httpRequest = {
             body: {
-                first_name: 'Fernando',
-                last_name: 'Albuquerque',
-                email: 'ferd33',
-                password: '12345678910',
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: 'invalid_email',
+                password: faker.internet.password({ length: 7 }),
             },
         }
         // act
@@ -114,9 +116,9 @@ describe('Create User Controller', () => {
 
         const httpRequest = {
             body: {
-                first_name: 'Fernando',
-                last_name: 'Albuquerque',
-                email: 'example@example.com',
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
             },
         }
 
@@ -134,10 +136,10 @@ describe('Create User Controller', () => {
 
         const httpRequest = {
             body: {
-                first_name: 'Fernando',
-                last_name: 'Albuquerque',
-                email: 'example@example.com',
-                password: '123',
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({ length: 5 }),
             },
         }
 
@@ -155,10 +157,10 @@ describe('Create User Controller', () => {
 
         const httpRequest = {
             body: {
-                first_name: 'Fernando',
-                last_name: 'Albuquerque',
-                email: 'example@example.com',
-                password: '12345678910',
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({ length: 7 }),
             },
         }
 
