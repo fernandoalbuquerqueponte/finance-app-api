@@ -149,9 +149,9 @@ describe('Create User Controller', () => {
     it('should return 500 if CreateUserUseCase throws', async () => {
         // arrange
         const { sut, createUserUseCase } = makeSut()
-        jest.spyOn(createUserUseCase, 'execute').mockImplementationOnce(() => {
-            throw new Error()
-        })
+        jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(
+            new Error(),
+        )
 
         // act
         const result = await sut.execute(httpRequest)
@@ -163,9 +163,9 @@ describe('Create User Controller', () => {
     it('should return 400 if CreateUserUseCase throws EmailIsAlreadyInUseError', async () => {
         // arrange
         const { sut, createUserUseCase } = makeSut()
-        jest.spyOn(createUserUseCase, 'execute').mockImplementationOnce(() => {
-            throw new EmailAlreadyInUseError(httpRequest.body.email)
-        })
+        jest.spyOn(createUserUseCase, 'execute').mockRejectedValueOnce(
+            new EmailAlreadyInUseError(httpRequest.body.email),
+        )
 
         // act
         const result = await sut.execute(httpRequest)
