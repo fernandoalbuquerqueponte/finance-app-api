@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker'
 import { GetUserByIdController } from './get-user-by-id.js'
 
 describe('GetUserByIdController', () => {
-    //nosso stub que simula o caso de sucesso que é justamente retornar o usuário com todos os campos que ele tem
     class GetUserByIdStub {
         async execute() {
             return {
@@ -61,5 +60,21 @@ describe('GetUserByIdController', () => {
 
         // assert
         expect(result.statusCode).toBe(404)
+    })
+
+    it('should return 500 if GetUserByIdUseCase throws an error', async () => {
+        // arrange
+        const { getUserByIdUseCase, sut } = makeSut()
+        jest.spyOn(getUserByIdUseCase, 'execute').mockRejectedValueOnce(
+            new Error(),
+        )
+
+        // act
+        const result = await sut.execute({
+            params: { userId: faker.string.uuid() },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(500)
     })
 })
