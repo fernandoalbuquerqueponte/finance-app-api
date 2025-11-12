@@ -1,3 +1,4 @@
+import { EmailAlreadyInUseError } from '../../errors/user'
 import { CreateUserUseCase } from './create-user'
 import { faker } from '@faker-js/faker'
 
@@ -26,22 +27,29 @@ describe('Create User Use Case', () => {
         }
     }
 
+    const user = {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
+    }
+
     const makeSut = () => {
-        const getUserByeEmailRepository = new GetUserByeEmailRepositoryStub()
+        const getUserByEmailRepository = new GetUserByeEmailRepositoryStub()
         const createUserRepository = new CreateUserRepositoryStub()
         const passwordHasherAdapter = new PasswordHasherAdapterStub()
         const idGeneratorAdapter = new IdGeneratorAdapterStub()
 
         const sut = new CreateUserUseCase(
             createUserRepository,
-            getUserByeEmailRepository,
+            getUserByEmailRepository,
             passwordHasherAdapter,
             idGeneratorAdapter,
         )
 
         return {
             sut,
-            getUserByeEmailRepository,
+            getUserByEmailRepository,
             createUserRepository,
             passwordHasherAdapter,
             idGeneratorAdapter,
@@ -52,14 +60,25 @@ describe('Create User Use Case', () => {
         const { sut } = makeSut()
 
         // act
-        const createdUser = await sut.execute({
-            first_name: faker.person.firstName(),
-            last_name: faker.person.lastName(),
-            email: faker.internet.email(),
-            password: faker.internet.password({ length: 7 }),
-        })
+        const createdUser = await sut.execute(user)
 
         // assert
         expect(createdUser).toBeTruthy()
+    })
+
+    it('should throw an EmailAlreadyInUseError if GetUserByEmailRepository returns an user', async () => {
+        // arrange
+        const { sut, getUserByEmailRepository } = makeSut()
+        jest.spyOn(getUserByEmailRepository, 'execute').mockReturnValueOnce(
+            user,
+        )
+
+        // act
+        const promise = sut.execute(user)
+
+        // assert
+        await expect(promise).rejects.toThrow(
+            new EmailAlreadyInUseError(user.email),
+        )
     })
 })
