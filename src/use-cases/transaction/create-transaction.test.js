@@ -154,4 +154,18 @@ describe('CreateTransactionUseCase', () => {
         // assert
         return expect(promise).rejects.toThrow()
     })
+
+    it('should throw if CreateTransactionRepository throws', () => {
+        // arrange
+        const { sut, createTransactionRepository } = makeSut()
+        jest.spyOn(createTransactionRepository, 'execute').mockRejectedValue(
+            new Error(),
+        )
+
+        // act
+        const promise = sut.execute(createTransactionParams)
+
+        // assert
+        return expect(promise).rejects.toThrow()
+    })
 })
