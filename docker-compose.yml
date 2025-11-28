@@ -11,5 +11,12 @@ services:
         volumes:
             - ./.postgres:/var/lib/postgresql/data
 
-volumes:
-    .postgres:
+    postgres-test:
+        image: postgres:latest
+        container_name: finance-app-postgre-test
+        environment:
+            POSTGRES_PASSWORD: password
+            POSTGRES_USER: root
+            POSTGRES_DB: financeapp
+        ports:
+            - '5433:5432'
