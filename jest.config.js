@@ -9,6 +9,7 @@ const config = {
     watchPathIgnorePatterns: ['<rootDir>/.postgres'],
     coverageProvider: 'v8',
     collectCoverageFrom: ['src/**/*.js'],
+    setupFilesAfterEnv: ['<rootDir>/jest.setup-after-env.js'],
     globalSetup: '<rootDir>/jest.global-setup.js',
 }
 
