@@ -29,4 +29,17 @@ describe('PostgresGetTransactionsByUserIdRepository', () => {
             dayjs(transaction.date).year(),
         )
     })
+
+    it('should call prisma with correct params', async () => {
+        const sut = new PostgresGetTransactionsByUserIdRepository()
+        const prismaSpy = jest.spyOn(prisma.transaction, 'findMany')
+
+        await sut.execute(user.id)
+
+        expect(prismaSpy).toHaveBeenCalledWith({
+            where: {
+                user_id: user.id,
+            },
+        })
+    })
 })
