@@ -16,7 +16,7 @@ export class PostgresDeleteTransactionRepository {
 
                 // p2025 = "An operation failed because it depends on one or more records that were required but not found. {cause}"
                 if (code === 'P2025') {
-                    throw new TransactionNotFoundError()
+                    throw new TransactionNotFoundError(transactionId)
                 }
             }
             throw error
