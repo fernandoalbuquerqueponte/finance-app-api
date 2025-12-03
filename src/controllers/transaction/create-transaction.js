@@ -3,8 +3,10 @@ import {
     badRequest,
     created,
     serverError,
+    userNotFoundResponse,
 } from '../../controllers/helpers/index.js'
 import { createTransactionSchema } from '../../schemas/index.js'
+import { UserNotFoundError } from '../../errors/user.js'
 
 export class CreateTransactionController {
     constructor(createTransactionUseCase) {
@@ -26,6 +28,11 @@ export class CreateTransactionController {
                     message: error.errors[0].message,
                 })
             }
+
+            if (error instanceof UserNotFoundError) {
+                return userNotFoundResponse()
+            }
+
             console.error(error)
             return serverError()
         }
