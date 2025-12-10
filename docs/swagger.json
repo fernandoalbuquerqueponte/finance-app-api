@@ -34,6 +34,37 @@
           }
         }
       }
+    },
+    "/api/users/{userId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string",
+            "description": "ID of the user to get"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User found",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -56,30 +87,30 @@
           "type": "string",
           "example": "password"
         }
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "7e0427ec-070b-40cb-9515-153e9a2dc89b"
-          },
-          "first_name": {
-            "type": "string",
-            "example": "John"
-          },
-          "last_name": {
-            "type": "string",
-            "example": "Doe"
-          },
-          "email": {
-            "type": "string",
-            "example": "jonh@doe.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "password"
-          }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "7e0427ec-070b-40cb-9515-153e9a2dc89b"
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "jonh@doe.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
         }
       }
     }
