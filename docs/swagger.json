@@ -1,17 +1,15 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "FSC Finance App Api",
-    "description": "Api for FSC Finance App that allows users to manage their finances",
+    "title": "FSC Finance App API",
+    "description": "API for FSC Finance App without authentication.",
     "version": "1.0.0"
   },
   "paths": {
     "/api/users": {
       "post": {
         "summary": "Create a new user",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "parameters": [
           {
             "name": "body",
@@ -26,7 +24,7 @@
           "201": {
             "description": "User created successfully",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/UserWithToken"
             }
           },
           "400": {
@@ -42,25 +40,12 @@
             }
           }
         }
-      }
-    },
-    "/api/users/{userId}": {
+      },
       "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get user by ID",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string",
-            "description": "ID of the user to get"
-          }
-        ],
+        "tags": ["User"],
+        "summary": "Get authenticated user (no auth now)",
         "responses": {
-          "201": {
+          "200": {
             "description": "User found",
             "schema": {
               "$ref": "#/definitions/User"
@@ -81,19 +66,8 @@
         }
       },
       "delete": {
-        "summary": "Delete user by ID",
-        "tags": [
-          "User"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string",
-            "description": "ID of the user to delete"
-          }
-        ],
+        "summary": "Delete authenticated user (no auth now)",
+        "tags": ["User"],
         "responses": {
           "200": {
             "description": "User deleted successfully",
@@ -117,16 +91,13 @@
       },
       "patch": {
         "summary": "Update user by ID",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "parameters": [
           {
             "in": "path",
             "name": "userId",
             "required": true,
-            "type": "string",
-            "description": "ID of the user to update"
+            "type": "string"
           },
           {
             "name": "body",
@@ -138,7 +109,7 @@
           }
         ],
         "responses": {
-          "20": {
+          "200": {
             "description": "User updated successfully",
             "schema": {
               "$ref": "#/definitions/User"
@@ -165,26 +136,75 @@
         }
       }
     },
-    "/api/users/{userId}/balance": {
+
+    "/api/transactions": {
       "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get user balance by ID",
+        "summary": "Get user transactions",
+        "tags": ["Transaction"],
         "parameters": [
           {
-            "in": "path",
-            "name": "userId",
+            "name": "from",
+            "in": "query",
             "required": true,
             "type": "string",
-            "description": "ID of the user to get user balance"
+            "format": "date"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date"
           }
         ],
         "responses": {
           "200": {
-            "description": "User balance found",
+            "description": "Transactions found",
             "schema": {
-              "$ref": "#/definitions/UserBalance"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Transaction"
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFoundResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new transaction",
+        "tags": ["Transaction"],
+        "parameters": [
+          {
+            "name": "body",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateTransactionParams"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Transaction created successfully",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamResponse"
             }
           },
           "404": {
@@ -201,101 +221,175 @@
           }
         }
       }
-    }
-  },
-  "definitions": {
-    "CreateUserParams": {
-      "type": "object",
-      "properties": {
-        "first_name": {
-          "type": "string",
-          "example": "John"
-        },
-        "last_name": {
-          "type": "string",
-          "example": "Doe"
-        },
-        "email": {
-          "type": "string",
-          "example": "jonh@doe.com"
-        },
-        "password": {
-          "type": "string",
-          "example": "password"
+    },
+
+    "/api/transactions/{transactionId}": {
+      "patch": {
+        "summary": "Update transaction by ID",
+        "tags": ["Transaction"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "transactionId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UpdateTransactionParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamResponse"
+            }
+          },
+          "404": {
+            "description": "Transaction not found",
+            "schema": {
+              "$ref": "#/definitions/TransactionNotFoundResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete transaction by ID",
+        "tags": ["Transaction"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "transactionId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          },
+          "404": {
+            "description": "Transaction not found",
+            "schema": {
+              "$ref": "#/definitions/TransactionNotFoundResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
         }
       }
-    },
+    }
+  },
+
+  "definitions": {
     "User": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "example": "7e0427ec-070b-40cb-9515-153e9a2dc89b"
-        },
-        "first_name": {
-          "type": "string",
-          "example": "John"
-        },
-        "last_name": {
-          "type": "string",
-          "example": "Doe"
-        },
-        "email": {
-          "type": "string",
-          "example": "jonh@doe.com"
-        },
-        "password": {
-          "type": "string",
-          "example": "password"
-        }
+        "id": { "type": "string" },
+        "first_name": { "type": "string" },
+        "last_name": { "type": "string" },
+        "email": { "type": "string" },
+        "password": { "type": "string" }
       }
     },
-    "InternalServerErrorResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "example": "Internal server error"
-        }
-      }
+
+    "UserWithToken": {
+      "allOf": [
+        { "$ref": "#/definitions/User" },
+        { "type": "object", "properties": {} }
+      ]
     },
+
     "UserNotFoundResponse": {
       "type": "object",
       "properties": {
-        "message": {
-          "type": "string",
-          "example": "User not found"
-        }
+        "message": { "type": "string" }
       }
     },
+
     "InvalidParamResponse": {
       "type": "object",
       "properties": {
-        "message": {
-          "type": "string",
-          "example": "Invalid params"
-        }
+        "message": { "type": "string" }
       }
     },
-    "UserBalance": {
+
+    "InternalServerErrorResponse": {
       "type": "object",
       "properties": {
-        "earnings": {
-          "type": "string",
-          "example": "1000"
-        },
-        "expenses": {
-          "type": "string",
-          "example": "500"
-        },
-        "investments": {
-          "type": "string",
-          "example": "1000"
-        },
-        "balance": {
-          "type": "string",
-          "example": "1000"
-        }
+        "message": { "type": "string" }
+      }
+    },
+
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "user_id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "amount": { "type": "string" }
+      }
+    },
+
+    "CreateUserParams": {
+      "type": "object",
+      "properties": {
+        "first_name": { "type": "string" },
+        "last_name": { "type": "string" },
+        "email": { "type": "string" },
+        "password": { "type": "string" }
+      }
+    },
+
+    "CreateTransactionParams": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "date": { "type": "string" },
+        "amount": { "type": "number" }
+      }
+    },
+
+    "UpdateTransactionParams": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "date": { "type": "string" },
+        "amount": { "type": "number" }
+      }
+    },
+
+    "TransactionNotFoundResponse": {
+      "type": "object",
+      "properties": {
+        "message": { "type": "string" }
       }
     }
   }
