@@ -11,6 +11,7 @@ const config = {
     collectCoverageFrom: ['src/**/*.js'],
     setupFilesAfterEnv: ['<rootDir>/jest.setup-after-env.js'],
     globalSetup: '<rootDir>/jest.global-setup.js',
+    globalTeardown: './jest.teardown.js',
 }
 
 export default config
