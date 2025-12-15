@@ -21,6 +21,9 @@ jobs:
               with:
                   node-version: '20'
 
+            - name: Install dependecies
+              run: npm install
+
             - name: Eslint
               run: npm run eslint:check
 
