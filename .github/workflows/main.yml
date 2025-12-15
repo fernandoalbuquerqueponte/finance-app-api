@@ -22,7 +22,7 @@ jobs:
                   node-version: '20'
 
             - name: Create .env.test file
-              run: echo "DATABASE_URL="postgresql://root:password@localhost:5433/financeapp?schema=public" >> .env.test
+              run: echo 'DATABASE_URL="postgresql://root:password@localhost:5433/financeapp?schema=public' >> .env.test
 
             - name: Install dependecies
               run: npm install
