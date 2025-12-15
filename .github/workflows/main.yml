@@ -1,13 +1,11 @@
 # Nome da nossa action
 name: Deploy
 
-# roda a action a cada push
 on:
     push:
         branches:
             - main
 
-# Definir os Jobs
 jobs:
     check:
         runs-on: ubuntu-latest
@@ -22,7 +20,7 @@ jobs:
                   node-version: '20'
 
             - name: Create .env.test file
-              run: echo 'DATABASE_URL=postgresql://root:password@localhost:5433/financeapp?schema=public' >> .env.test
+              run: echo 'DATABASE_URL="postgresql://root:password@localhost:5433/financeapp?schema=public"' >> .env.test
 
             - name: Install dependencies
               run: npm install
@@ -34,4 +32,6 @@ jobs:
               run: npm run prettier:check
 
             - name: Test
-              run: npm run test
+              run: |
+                  export $(cat .env.test | xargs)
+                  npm run test
