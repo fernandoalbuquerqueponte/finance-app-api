@@ -1,6 +1,12 @@
-import { badRequest, notFound, ok, serverError, unauthorized } from '../helpers'
+import {
+    badRequest,
+    notFound,
+    ok,
+    serverError,
+    unauthorized,
+} from '../helpers/index.js'
 import { InvalidPasswordError, UserNotFoundError } from '../../errors/user.js'
-import { loginSchema } from '../../schemas/index'
+import { loginSchema } from '../../schemas/index.js'
 import { ZodError } from 'zod'
 
 export class LoginUserController {
