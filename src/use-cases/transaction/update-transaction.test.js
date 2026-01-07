@@ -9,10 +9,22 @@ describe('UpdateTransactionUseCase', () => {
         }
     }
 
+    class GetTransactionByIdStub {
+        async execute() {
+            return transaction
+        }
+    }
+
     const makeSut = () => {
         const updateTransactionRepository =
             new UpdateTransactionRepositoryStub()
-        const sut = new UpdateTransactionUseCase(updateTransactionRepository)
+
+        const getTransactionByIdRepository = new GetTransactionByIdStub()
+        const sut = new UpdateTransactionUseCase(
+            updateTransactionRepository,
+            getTransactionByIdRepository,
+            getTransactionByIdRepository,
+        )
 
         return { sut, updateTransactionRepository }
     }

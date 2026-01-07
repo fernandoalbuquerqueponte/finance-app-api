@@ -1,9 +1,12 @@
 import request from 'supertest'
 import { app } from '../app.cjs'
-import { transaction, user } from '../tests'
+import { transaction, user } from '../tests/index.js'
 import { TransactionType } from '@prisma/client'
 
 describe('Transaction Routes E2E Tests', () => {
+    const from = '2024-01-01'
+    const to = '2024-01-31'
+
     it('POST /api/transactions should return 201 when creating a transaction successfully', async () => {
         const { body: createdUser } = await request(app)
             .post('/api/users')
@@ -14,6 +17,7 @@ describe('Transaction Routes E2E Tests', () => {
 
         const response = await request(app)
             .post('/api/transactions')
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
             .send({ ...transaction, user_id: createdUser.id, id: undefined })
 
         expect(response.status).toBe(201)
@@ -32,17 +36,23 @@ describe('Transaction Routes E2E Tests', () => {
 
         const { body: createdTransaction } = await request(app)
             .post('/api/transactions')
-            .send({ ...transaction, user_id: createdUser.id, id: undefined })
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .send({
+                ...transaction,
+                date: new Date(from),
+                user_id: createdUser.id,
+                id: undefined,
+            })
 
-        const response = await request(app).get(
-            `/api/transactions?userId=${createdUser.id}`,
-        )
+        const response = await request(app)
+            .get(`/api/transactions?from=${from}&to=${to}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
 
         expect(response.status).toBe(200)
         expect(response.body[0].id).toBe(createdTransaction.id)
     })
 
-    it('PATCH /api/transactions/:transactionId should return 200 when updating a transaction successfully', async () => {
+    it('PATCH /api/transactions/me/:transactionId should return 200 when updating a transaction successfully', async () => {
         const { body: createdUser } = await request(app)
             .post('/api/users')
             .send({
@@ -52,18 +62,20 @@ describe('Transaction Routes E2E Tests', () => {
 
         const { body: createdTransaction } = await request(app)
             .post('/api/transactions')
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
             .send({ ...transaction, user_id: createdUser.id, id: undefined })
 
         const response = await request(app)
             .patch(`/api/transactions/${createdTransaction.id}`)
-            .send({ amount: 100, type: TransactionType.EARNING })
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .send({ amount: 100, type: TransactionType.INVESTMENT })
 
         expect(response.status).toBe(200)
         expect(response.body.amount).toBe('100')
-        expect(response.body.type).toBe(TransactionType.EARNING)
+        expect(response.body.type).toBe(TransactionType.INVESTMENT)
     })
 
-    it('DELETE /api/transaction/:transactionId should return 200 when deleting a transaction successfully', async () => {
+    it('DELETE /api/transactions/:transactionId should return 200 when deleting a transaction successfully', async () => {
         const { body: createdUser } = await request(app)
             .post('/api/users')
             .send({
@@ -73,36 +85,44 @@ describe('Transaction Routes E2E Tests', () => {
 
         const { body: createdTransaction } = await request(app)
             .post('/api/transactions')
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
             .send({ ...transaction, user_id: createdUser.id, id: undefined })
 
-        const response = await request(app).delete(
-            `/api/transactions/${createdTransaction.id}`,
-        )
+        const response = await request(app)
+            .delete(`/api/transactions/${createdTransaction.id}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(createdTransaction.id)
     })
 
     it('PATCH /api/transactions/:transactionId should return 404 when updating a non-existing transaction', async () => {
+        const { body: createdUser } = await request(app)
+            .post('/api/users')
+            .send({
+                ...user,
+                id: undefined,
+            })
+
         const response = await request(app)
             .patch(`/api/transactions/${transaction.id}`)
-            .send({ amount: 100, type: TransactionType.EARNING })
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .send({ amount: 100, type: TransactionType.INVESTMENT })
 
         expect(response.status).toBe(404)
     })
 
-    it('DELETE /api/transactions/:transactionId should return 404 when updating a non-existing transaction', async () => {
+    it('DELETE /api/transactions/:transactionId should return 404 when deleting a non-existing transaction', async () => {
+        const { body: createdUser } = await request(app)
+            .post('/api/users')
+            .send({
+                ...user,
+                id: undefined,
+            })
+
         const response = await request(app)
             .delete(`/api/transactions/${transaction.id}`)
-            .send({ amount: 100, type: TransactionType.EARNING })
-
-        expect(response.status).toBe(404)
-    })
-
-    it('GET /api/transaction?userId should return 404 when fetching transactions from a non-existing user', async () => {
-        const response = await request(app).get(
-            `/api/transactions?userId=${transaction.user_id}`,
-        )
+            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
 
         expect(response.status).toBe(404)
     })
