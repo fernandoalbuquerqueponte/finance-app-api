@@ -7,7 +7,7 @@ describe('LoginUserController', () => {
             return {
                 user: user,
                 tokens: {
-                    acessToken: 'any_access_token',
+                    accessToken: 'any_access_token',
                     refreshToken: 'any_refresh_token',
                 },
             }
@@ -34,7 +34,7 @@ describe('LoginUserController', () => {
         const response = await sut.execute(httpRequest)
 
         expect(response.statusCode).toBe(200)
-        expect(response.body.tokens.acessToken).toBe('any_access_token')
+        expect(response.body.tokens.accessToken).toBe('any_access_token')
         expect(response.body.tokens.refreshToken).toBe('any_refresh_token')
     })
 

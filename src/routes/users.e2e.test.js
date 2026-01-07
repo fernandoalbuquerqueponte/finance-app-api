@@ -28,7 +28,7 @@ describe('User Routes E2E Tests', () => {
 
         const response = await request(app)
             .get(`/api/users`)
-            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(createdUser.id)
@@ -51,7 +51,7 @@ describe('User Routes E2E Tests', () => {
 
         const response = await request(app)
             .patch(`/api/users`)
-            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.accessToken}`)
             .send(updateUserParams)
 
         expect(response.status).toBe(200)
@@ -71,7 +71,7 @@ describe('User Routes E2E Tests', () => {
 
         const response = await request(app)
             .delete(`/api/users`)
-            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(createdUser.id)
@@ -87,7 +87,7 @@ describe('User Routes E2E Tests', () => {
 
         await request(app)
             .post('/api/transactions')
-            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.accessToken}`)
             .send({
                 user_id: createdUser.id,
                 name: faker.commerce.productName(),
@@ -98,7 +98,7 @@ describe('User Routes E2E Tests', () => {
 
         await request(app)
             .post('/api/transactions')
-            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.accessToken}`)
             .send({
                 user_id: createdUser.id,
                 name: faker.commerce.productName(),
@@ -109,7 +109,7 @@ describe('User Routes E2E Tests', () => {
 
         await request(app)
             .post('/api/transactions')
-            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.accessToken}`)
             .send({
                 user_id: createdUser.id,
                 name: faker.commerce.productName(),
@@ -120,7 +120,7 @@ describe('User Routes E2E Tests', () => {
 
         const response = await request(app)
             .get(`/api/users/balance?from=${from}&to=${to}`)
-            .set('Authorization', `Bearer ${createdUser.tokens.acessToken}`)
+            .set('Authorization', `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
         expect(response.body).toEqual({
@@ -164,7 +164,7 @@ describe('User Routes E2E Tests', () => {
         })
 
         expect(response.status).toBe(200)
-        expect(response.body.tokens.acessToken).toBeDefined()
+        expect(response.body.tokens.accessToken).toBeDefined()
         expect(response.body.tokens.refreshToken).toBeDefined()
     })
 })

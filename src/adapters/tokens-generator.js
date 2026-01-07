@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 export class TokensGeneratorAdapter {
     execute(userId) {
         return {
-            acessToken: jwt.sign(
+            accessToken: jwt.sign(
                 { userId: userId },
                 process.env.JWT_ACCESS_TOKEN_SECRET,
                 { expiresIn: '15m' },

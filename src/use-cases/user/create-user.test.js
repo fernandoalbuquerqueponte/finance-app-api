@@ -34,7 +34,7 @@ describe('Create User Use Case', () => {
     class TokensGeneratorAdapterStub {
         execute() {
             return {
-                acessToken: 'any_acess_token',
+                accessToken: 'any_acess_token',
                 refreshToken: 'any_refresh_token',
             }
         }
@@ -73,7 +73,7 @@ describe('Create User Use Case', () => {
 
         // assert
         expect(createdUser).toBeTruthy()
-        expect(createdUser.tokens.acessToken).toBeDefined()
+        expect(createdUser.tokens.accessToken).toBeDefined()
         expect(createdUser.tokens.refreshToken).toBeDefined()
     })
 

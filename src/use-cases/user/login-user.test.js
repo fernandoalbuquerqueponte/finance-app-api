@@ -17,7 +17,7 @@ describe('LoginUserUseCase', () => {
     class TokensGeneratorAdapterStub {
         async execute() {
             return {
-                acessToken: 'any_access_token',
+                accessToken: 'any_access_token',
                 refreshToken: 'any_refresh_token',
             }
         }
@@ -70,7 +70,7 @@ describe('LoginUserUseCase', () => {
 
         const result = await sut.execute('any_email', 'any_password')
 
-        expect(result.tokens.acessToken).toBeDefined()
+        expect(result.tokens.accessToken).toBeDefined()
         expect(result.tokens.refreshToken).toBeDefined()
     })
 })
