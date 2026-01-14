@@ -28,8 +28,11 @@ export class GetTransactionsByIdController {
                 to,
             })
 
-            const transactions =
-                await this.getTransactionsByIdUseCase.execute(userId)
+            const transactions = await this.getTransactionsByIdUseCase.execute(
+                userId,
+                from,
+                to,
+            )
 
             return ok(transactions)
         } catch (error) {
