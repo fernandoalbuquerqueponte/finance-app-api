@@ -3,18 +3,43 @@ import { transaction } from '../../tests'
 import { faker } from '@faker-js/faker'
 
 describe('DeleteTransactionUseCase', () => {
+    const user_id = faker.string.uuid()
+
     class DeleteTransactionRepositoryStub {
         async execute() {
-            return transaction
+            return {
+                ...transaction,
+                user_id,
+            }
+        }
+    }
+
+    class GetTransactionByIdRepositoryStub {
+        async execute() {
+            return {
+                ...transaction,
+                user_id,
+            }
         }
     }
 
     const makeSut = () => {
         const deleteTransactionRepository =
             new DeleteTransactionRepositoryStub()
-        const sut = new DeleteTransactionUseCase(deleteTransactionRepository)
 
-        return { sut, deleteTransactionRepository }
+        const getTransactionByIdRepository =
+            new GetTransactionByIdRepositoryStub()
+
+        const sut = new DeleteTransactionUseCase(
+            deleteTransactionRepository,
+            getTransactionByIdRepository,
+        )
+
+        return {
+            sut,
+            deleteTransactionRepository,
+            getTransactionByIdRepository,
+        }
     }
 
     it('should delete transaction successfully', async () => {
@@ -22,10 +47,13 @@ describe('DeleteTransactionUseCase', () => {
         const { sut } = makeSut()
 
         // act
-        const result = await sut.execute(transaction.id)
+        const result = await sut.execute(transaction.id, user_id)
 
         // assert
-        expect(result).toEqual(transaction)
+        expect(result).toEqual({
+            ...transaction,
+            user_id,
+        })
     })
 
     it('should call DeleteTransactionRepository with correct params', async () => {
@@ -38,7 +66,7 @@ describe('DeleteTransactionUseCase', () => {
         const id = faker.string.uuid()
 
         // act
-        await sut.execute(id)
+        await sut.execute(id, user_id)
 
         // assert
         expect(deleteTransactionRepositorySpy).toHaveBeenCalledWith(id)
@@ -55,7 +83,7 @@ describe('DeleteTransactionUseCase', () => {
         const id = faker.string.uuid()
 
         // act
-        const promise = sut.execute(id)
+        const promise = sut.execute(id, user_id)
 
         // assert
         await expect(promise).rejects.toThrow()
