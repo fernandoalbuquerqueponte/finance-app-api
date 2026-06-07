@@ -3,8 +3,16 @@ const { usersRouter, transactionsRouter } = require('./routes/index.js')
 const swaggerUi = require('swagger-ui-express')
 const fs = require('fs')
 const path = require('path')
+const cors = require('cors')
 
 const app = express()
+
+app.use(
+    cors({
+        origin: 'http://localhost:5173', // Permite apenas o seu frontend local
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos (opcional, mas recomendado)
+    }),
+)
 
 app.use(express.json())
 
